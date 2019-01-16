@@ -62,6 +62,9 @@ spec:
       port: {{ $key }}
       protocol: TCP
       targetPort: "{{ $key }}-tcp"
+      {{- if (and (eq $.Values.controller.service.type "NodePort") (not (empty (index $.Values.controller.service.nodePorts (printf "%s-tcp" $key))))) }}
+      nodePort: {{ index $.Values.controller.service.nodePorts (printf "%s-tcp" $key) }}
+      {{- end }}
   {{- end }}
   {{- range $key, $value := .Values.udp }}
     - name: "{{ $key }}-udp"
